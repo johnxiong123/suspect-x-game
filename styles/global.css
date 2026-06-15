@@ -1,0 +1,56 @@
+:root {
+  --bg: #0e1116;
+  --stage: #0b0e13;
+  --panel: #10151d;
+  --panel-2: #161c26;
+  --ink: #e9edf3;
+  --muted: #93a0b1;
+  --faint: #5c6878;
+  --line: rgba(255, 255, 255, 0.10);
+  --line-2: rgba(255, 255, 255, 0.18);
+  --amber: #d3a05a;
+  --accent: #d98a2b;
+  --branch: #e0a13a;
+  --danger: #c0566a;
+  --info: #5aa0e0;
+  --radius: 10px;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: system-ui, -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  overflow: hidden;
+}
+button { font-family: inherit; color: inherit; cursor: pointer; border: none; }
+
+#app { display: flex; height: 100vh; width: 100vw; overflow: hidden; }
+.stage { position: relative; flex: 1; min-width: 0; background: var(--stage); overflow: hidden; }
+
+.navrail {
+  width: 56px; flex: none; background: var(--panel);
+  border-right: 1px solid var(--line);
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  padding: 14px 0; z-index: 30;
+}
+.nav-btn {
+  width: 40px; height: 40px; border-radius: 10px; background: transparent;
+  color: var(--muted); display: flex; align-items: center; justify-content: center;
+  position: relative; transition: 0.15s;
+}
+.nav-btn svg { width: 22px; height: 22px; }
+.nav-btn:hover { background: var(--panel-2); color: var(--ink); }
+.nav-btn.active { color: var(--amber); background: var(--panel-2); }
+.nav-btn.badge::after {
+  content: ''; position: absolute; top: 7px; right: 7px;
+  width: 7px; height: 7px; border-radius: 50%; background: var(--danger);
+}
+
+.panel {
+  width: 340px; flex: none; background: var(--panel);
+  border-left: 1px solid var(--line);
+  display: flex; flex-direction: column; min-height: 0; z-index: 20;
+}
+@media (max-width: 1000px) { .panel { width: 280px; } }

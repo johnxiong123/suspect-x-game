@@ -1,0 +1,18 @@
+[
+  { "id": "green_bicycle", "title": "绿色脚踏车", "chapter": "第一章", "icon": "icon_green_bicycle",
+    "desc": "靖子每天清晨骑去天亭上班的绿色脚踏车。石神靠它是否在停车场，判断她是否出门。" },
+  { "id": "kotatsu_cord", "title": "暖桌电线", "chapter": "第一章", "icon": "icon_kotatsu_cord",
+    "desc": "缠住富坚脖子的凶器。空心麻花状的电线，勒痕会成为日后定案的关键。" },
+  { "id": "movie_tickets", "title": "电影票根", "chapter": "第一章", "icon": "icon_movie_tickets",
+    "desc": "石神安排的不在场证明之一。两张票根上留有花冈母女的指纹。" },
+  { "id": "math_notebook", "title": "写满算式的报告纸", "chapter": "第一章", "icon": "icon_math_notebook",
+    "desc": "石神彻夜推演的痕迹。他把一桩命案，当成一道必须解开的数学题。" },
+  { "id": "room_key_305", "title": "旅馆钥匙（305）", "chapter": "第四章", "icon": "icon_room_key_305",
+    "desc": "圆牌上刻着 305。富坚以本名登记入住的房间钥匙。" },
+  { "id": "wiretap", "title": "墙内的窃听器", "chapter": "终章", "icon": "icon_wiretap",
+    "desc": "石神撕开壁纸藏下的收音器，能听见隔壁的一举一动。" },
+  { "id": "diamond_ring", "title": "钻戒", "chapter": "终章", "icon": "icon_diamond_ring",
+    "desc": "工藤向靖子求婚的戒指。璀璨夺目，却照不亮她空洞的内心。" },
+  { "id": "blue_tarp", "title": "蓝色塑胶布", "chapter": "贯穿", "icon": "icon_blue_tarp",
+    "desc": "隅田川游民的蓝帐篷、弃尸现场的蓝布——同一种蓝，连成一个闭环。" }
+]

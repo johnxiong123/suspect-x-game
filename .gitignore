@@ -1,0 +1,11 @@
+# macOS
+.DS_Store
+**/.DS_Store
+
+# 原著版权文本（不纳入仓库）
+嫌疑犯X的献身_东野圭吾_TXT小说天堂.txt
+*.txt
+
+# 依赖 / 杂项
+node_modules/
+*.log
