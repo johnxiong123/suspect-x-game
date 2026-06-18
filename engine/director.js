@@ -54,6 +54,12 @@ export class Director {
       this.ctx.onChapterEnd?.(this.chapter, node);
       return;
     }
+    // 条件分支：按累积状态自动路由（用于终章多结局收束）。最后一项可省略 requires 作为默认。
+    if (node.branches && node.branches.length) {
+      const b = node.branches.find((br) => evalCondition(br.requires, state)) || node.branches[node.branches.length - 1];
+      await this.goto(b.goto);
+      return;
+    }
     if (node.choices && node.choices.length) {
       const avail = node.choices.filter((c) => evalCondition(c.requires, state));
       const idx = await this.ctx.dialogue.showChoices(avail);
