@@ -82,39 +82,39 @@
     },
     "icon_green_bicycle": {
       "label": "绿色脚踏车",
-      "src": "assets/images/icon_green_bicycle.png"
+      "src": "assets/images/cover_icons/icon_green_bicycle.png"
     },
     "icon_kotatsu_cord": {
       "label": "暖桌电线",
-      "src": "assets/images/icon_kotatsu_cord.png"
+      "src": "assets/images/cover_icons/icon_kotatsu_cord.png"
     },
     "icon_room_key_305": {
       "label": "旅馆钥匙 305",
-      "src": "assets/images/icon_room_key_305.png"
+      "src": "assets/images/cover_icons/icon_room_key_305.png"
     },
     "icon_movie_tickets": {
       "label": "电影票根",
-      "src": "assets/images/icon_movie_tickets.png"
+      "src": "assets/images/cover_icons/icon_movie_tickets.png"
     },
     "icon_math_notebook": {
       "label": "算式报告纸",
-      "src": "assets/images/icon_math_notebook.png"
+      "src": "assets/images/cover_icons/icon_math_notebook.png"
     },
     "icon_wiretap": {
       "label": "窃听器",
-      "src": "assets/images/icon_wiretap.png"
+      "src": "assets/images/cover_icons/icon_wiretap.png"
     },
     "icon_diamond_ring": {
       "label": "钻戒",
-      "src": "assets/images/icon_diamond_ring.png"
+      "src": "assets/images/cover_icons/icon_diamond_ring.png"
     },
     "icon_blue_tarp": {
       "label": "蓝色塑胶布",
-      "src": "assets/images/icon_blue_tarp.png"
+      "src": "assets/images/cover_icons/icon_blue_tarp.png"
     },
     "title_keyvisual": {
       "label": "嫌疑犯X的献身",
-      "src": "assets/images/title_keyvisual.png"
+      "src": "assets/images/cover_icons/title_keyvisual.png"
     }
   }
 }

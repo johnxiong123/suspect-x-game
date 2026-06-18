@@ -10,11 +10,15 @@
 bright cheerful colors, moe, chibi, cute, glossy cel-shading, oversaturated, neon, 3D CG render, photorealistic photo, text, captions, watermark, signature, UI elements, frame border, extra fingers, deformed hands, lowres
 ```
 
-**画幅：** 场景 / CG / 标题 = `16:9`；线索图标 = `3:4`（竖图，与卡片相框一致）
+**尺寸（务必按此出图）：**
+- 场景背景 / 事件 CG / 封面 = **1920×1080**（16:9 横图）
+- 线索图标 = **768×1024**（3:4 竖图，与卡片相框一致）
+
+> ⚠️ 封面 `title_keyvisual` 必须出成 **16:9 横图**，不要出成竖图。
 
 ---
 
-## 一、场景背景 ×10（16:9）
+## 一、场景背景 ×10（1920×1080 · 16:9）
 
 ### `bg_tentei_day.png` — 天亭便当店·清晨
 ```
@@ -68,7 +72,7 @@ Dark cinematic semi-realistic anime visual-novel illustration in the style of a 
 
 ---
 
-## 二、含人物高潮 CG ×10（16:9）
+## 二、含人物高潮 CG ×10（1920×1080 · 16:9）
 
 ### `cg_murder_strangling.png` — 命案·四只手
 ```
@@ -122,7 +126,7 @@ Dark cinematic semi-realistic anime visual-novel illustration in the style of a 
 
 ---
 
-## 三、线索图标 ×8（3:4 竖图，物件居中占满 ¾ 画面、中性灰底）
+## 三、线索图标 ×8（768×1024 · 3:4 竖图，物件居中占满 ¾ 画面、中性灰底）
 
 ### `icon_green_bicycle.png` — 绿色脚踏车
 ```
@@ -166,7 +170,7 @@ Semi-realistic painterly inventory item icon for a mature mystery game, a single
 
 ---
 
-## 四、标题主视觉 ×1（16:9）
+## 四、标题主视觉 ×1（1920×1080 · 16:9 横图）
 
 ### `title_keyvisual.png` — 封面主视觉
 ```
@@ -191,9 +195,11 @@ Dark cinematic semi-realistic anime visual-novel key visual, painterly highly de
 
 ## 出图流程
 
-1. 按上方 prompt 逐张生成，宽高比照标注（16:9 / 1:1）。
-2. 保存为对应**文件名**（如 `cg_interrogation_climax.png`）放入 `assets/images/`。
-3. 运行 `node scripts/sync-manifest.mjs` 回填 `assets/manifest.json`。
-4. 刷新浏览器（`localhost:8099`），占位自动替换为正式美术。
+1. 按上方 prompt 逐张生成，宽高比照标注（场景/CG/封面 16:9；线索图标 3:4）。
+2. 保存为对应**文件名**：
+   - 场景背景、事件 CG → `assets/images/`
+   - **封面 `title_keyvisual.png` 与 8 个 `icon_*.png` → `assets/images/cover_icons/`**（单独文件夹）
+3. 运行 `node scripts/sync-manifest.mjs` 回填 `assets/manifest.json`（已支持子文件夹递归）。
+4. 刷新浏览器（`localhost:8099`，文件名不变时用 `Cmd+Shift+R` 硬刷新），占位自动替换为正式美术。
 
 建议先出 `cg_interrogation_climax`、`cg_murder_strangling`、`cg_ishigami_examines_body`、`bg_yasuko_apt_night`、`title_keyvisual` 这 5 张校准画风，统一后再批量出全。
