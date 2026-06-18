@@ -14,5 +14,13 @@
   { "id": "diamond_ring", "title": "钻戒", "chapter": "终章", "icon": "icon_diamond_ring",
     "desc": "工藤向靖子求婚的戒指。璀璨夺目，却照不亮她空洞的内心。" },
   { "id": "blue_tarp", "title": "蓝色塑胶布", "chapter": "贯穿", "icon": "icon_blue_tarp",
-    "desc": "隅田川游民的蓝帐篷、弃尸现场的蓝布——同一种蓝，连成一个闭环。" }
+    "desc": "隅田川游民的蓝帐篷、弃尸现场的蓝布——同一种蓝，连成一个闭环。" },
+  { "id": "disfigured_corpse", "title": "毁容的尸体", "chapter": "第二章",
+    "desc": "旧江户川堤防发现的全裸尸体，脸被砸得面目全非、指纹也被烧毁，身份难以辨认。" },
+  { "id": "daito_univ_mail", "title": "帝都大学信封", "chapter": "第二章",
+    "desc": "石神信箱里印着「帝都大学」字样的校友会刊——一个看似普通的高中数学老师，竟出身名校。" },
+  { "id": "ishigami_past", "title": "达摩·天才传说", "chapter": "第三章",
+    "desc": "汤川口中的石神：帝大数学系五十年难遇的天才，因终日埋首研究、不动如山，得绰号「达摩」。" },
+  { "id": "hidden_witness", "title": "里屋的偷听者", "chapter": "第二章",
+    "desc": "盘问花冈靖子时，里屋的纸门突然合上——屋里还藏着一个人。" }
 ]
