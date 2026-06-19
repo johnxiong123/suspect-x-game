@@ -4,9 +4,9 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <title>嫌疑犯X的献身 · 互动推理</title>
-  <link rel="stylesheet" href="styles/global.css" />
+  <link rel="stylesheet" href="styles/global.css?v=2" />
   <link rel="stylesheet" href="styles/scene.css" />
-  <link rel="stylesheet" href="styles/ui.css" />
+  <link rel="stylesheet" href="styles/ui.css?v=2" />
 </head>
 <body>
   <div id="app">
@@ -14,14 +14,18 @@
     <main id="stage" class="stage">
       <div id="scene" class="scene"></div>
       <div class="topbar">
-        <div id="chapter-label" class="chapter-label"></div>
+        <div class="topbar-left">
+          <div class="seal" aria-hidden="true"><span>X</span></div>
+          <div id="chapter-label" class="chapter-label"></div>
+        </div>
         <div id="status" class="status"></div>
       </div>
+      <div id="quickbar" class="quickbar"></div>
       <div id="dialogue" class="dialogue"></div>
     </main>
     <aside id="panel" class="panel"></aside>
   </div>
   <div id="overlays" class="overlays"></div>
-  <script type="module" src="main.js"></script>
+  <script type="module" src="main.js?v=2"></script>
 </body>
 </html>

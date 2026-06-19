@@ -112,7 +112,8 @@ export function listSaves() {
     const k = store.key(i);
     if (k && k.startsWith(SAVE_PREFIX)) {
       const o = JSON.parse(store.getItem(k));
-      out.push({ slot: k.slice(SAVE_PREFIX.length), at: o.at, node: o.state?.current?.node });
+      const cur = o.state?.current || {};
+      out.push({ slot: k.slice(SAVE_PREFIX.length), at: o.at, node: cur.node, chapterTitle: cur.chapterTitle, bg: cur.bg });
     }
   }
   return out.sort((a, b) => (a.slot > b.slot ? 1 : -1));

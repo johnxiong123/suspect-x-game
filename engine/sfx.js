@@ -3,6 +3,7 @@ let ctx = null;
 let enabled = true;
 let lastT = 0;
 let typeBuffer = null; // 可选：打字采样音（自然，优先于合成）
+let typeVol = 0.5;     // 文字音效音量 0..1（0.5 → 原写死的 0.3 听感）
 
 function ac() {
   if (!ctx) {
@@ -20,6 +21,8 @@ export function unlock() {
 
 export function setEnabled(v) { enabled = !!v; }
 export function isEnabled() { return enabled; }
+export function setTypeVolume(v) { typeVol = Math.max(0, Math.min(1, v)); }
+export function getTypeVolume() { return typeVol; }
 
 // 载入可选的打字采样音（mp3/wav）；失败则保持用合成音
 export async function loadType(src) {
@@ -47,7 +50,7 @@ export function blip() {
     s.buffer = typeBuffer;
     const g = c.createGain();
     const tail = Math.min(0.12, typeBuffer.duration); // 只取开头的实际发声段，避免长静音尾叠加
-    g.gain.setValueAtTime(0.3, now);
+    g.gain.setValueAtTime(Math.max(0.0001, 0.6 * typeVol), now);
     g.gain.exponentialRampToValueAtTime(0.0001, now + tail);
     s.connect(g);
     g.connect(c.destination);
@@ -69,7 +72,7 @@ export function blip() {
   bp.Q.value = 0.7;
   const g = c.createGain();
   g.gain.setValueAtTime(0.0001, now);
-  g.gain.exponentialRampToValueAtTime(0.055, now + 0.002); // 极快起音
+  g.gain.exponentialRampToValueAtTime(Math.max(0.0002, 0.11 * typeVol), now + 0.002); // 极快起音
   g.gain.exponentialRampToValueAtTime(0.0001, now + dur);  // 快速衰减 → 干脆的"嗒"
 
   src.connect(bp);

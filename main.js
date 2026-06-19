@@ -1,17 +1,19 @@
 // 启动与装配：把引擎与各 UI 组件接到一起
-import { GameState, saveGame, loadGame, listSaves, getProgress } from './engine/state.js';
-import { Director } from './engine/director.js';
+import { GameState, saveGame, loadGame, listSaves, getProgress } from './engine/state.js?v=2';
+import { Director } from './engine/director.js?v=2';
 import { loadManifest } from './engine/assets.js';
+import { loadConfig, getConfig, setConfig } from './engine/config.js';
 import { Scene } from './ui/scene.js';
-import { Dialogue } from './ui/dialogue.js';
+import { Dialogue } from './ui/dialogue.js?v=2';
 import { Status } from './ui/status.js';
 import { Clues } from './ui/clues.js';
 import { Flowchart } from './ui/flowchart.js';
 import { NavRail } from './ui/navrail.js';
-import { Panel } from './ui/panel.js';
-import { Menus } from './ui/menus.js';
-import { loadAudioManifest, playTrack, resume } from './engine/audio.js';
-import { unlock as unlockSfx, loadType as loadTypeSfx } from './engine/sfx.js';
+import { Panel } from './ui/panel.js?v=2';
+import { QuickBar } from './ui/quickbar.js';
+import { Menus } from './ui/menus.js?v=2';
+import { loadAudioManifest, playTrack, resume, setVolume, setMuted } from './engine/audio.js?v=2';
+import { unlock as unlockSfx, loadType as loadTypeSfx, setEnabled as setSfxEnabled, setTypeVolume } from './engine/sfx.js?v=2';
 
 const START = 'ch01_001';
 const AUTO = 'auto';
@@ -33,6 +35,7 @@ async function getJSON(path) {
 
 async function boot() {
   await loadManifest();
+  const cfg = loadConfig();
   const audioManifest = await loadAudioManifest();
   loadTypeSfx(audioManifest.sfx?.type);
   const cluesData = await getJSON('data/clues.json');
@@ -40,7 +43,7 @@ async function boot() {
   const endingsData = await getJSON('data/endings.json');
 
   const scene = new Scene(document.getElementById('scene'));
-  const dialogue = new Dialogue(document.getElementById('dialogue'));
+  const dialogue = new Dialogue(document.getElementById('dialogue'), { speed: cfg.textSpeed, autoSpeed: cfg.autoSpeed });
   const status = new Status(document.getElementById('status'));
   const panel = new Panel(document.getElementById('panel'));
   const clues = new Clues(panel.cluesHost, cluesData);
@@ -49,6 +52,24 @@ async function boot() {
   panel.setCharacters(charData);
   const menus = new Menus(document.getElementById('overlays'));
   const chapterLabel = document.getElementById('chapter-label');
+
+  // 偏好配置：单一来源，改动即持久化并整体重新应用到各子系统
+  const quickbar = new QuickBar(document.getElementById('quickbar'), {
+    auto: () => configApi.set({ auto: !getConfig().auto }),
+    skip: () => configApi.set({ skip: !getConfig().skip }),
+    save: () => menus.saveLoad('save', { state, onLoaded: resumeFrom }),
+    load: () => menus.saveLoad('load', { state, onLoaded: resumeFrom }),
+  });
+  function applyConfig() {
+    const c = getConfig();
+    dialogue.setSpeed(c.textSpeed); dialogue.setAuto(c.auto);
+    dialogue.setAutoSpeed(c.autoSpeed); dialogue.setSkip(c.skip);
+    setVolume(c.bgmVol); setMuted(c.muted);
+    setTypeVolume(c.sfxVol); setSfxEnabled(c.sfxOn);
+    quickbar.setActive('auto', c.auto); quickbar.setActive('skip', c.skip);
+  }
+  const configApi = { get: getConfig, set: (p) => { setConfig(p); applyConfig(); } };
+  applyConfig();
 
   let state;
   let director;
@@ -69,6 +90,7 @@ async function boot() {
     state = new GameState();
     buildDirector();
     menus.closeAll();
+    quickbar.setVisible(true);
     syncHud();
     director.start(START);
   }
@@ -76,6 +98,7 @@ async function boot() {
     state = s;
     buildDirector();
     menus.closeAll();
+    quickbar.setVisible(true);
     syncHud();
     director.goto(state.current.node || START);
   }
@@ -87,11 +110,13 @@ async function boot() {
     state = new GameState();
     buildDirector();
     menus.closeAll();
+    quickbar.setVisible(true);
     syncHud();
     director.start(chId + '_001');
   }
   const chapterTitleOf = (id) => { const c = CHAPTERS.find((x) => x.id === id); return c ? c.title : ''; };
   function showTitle() {
+    quickbar.setVisible(false);
     playTrack('title');
     const autoState = loadGame(AUTO);
     const autoInfo = listSaves().find((s) => s.slot === AUTO);
@@ -108,7 +133,7 @@ async function boot() {
       onContinue: continueAuto,
       onChapterSelect: () => menus.chapterSelect(CHAPTERS, { onPick: startChapter }),
       onGallery: () => menus.gallery(endingsData),
-      onSettings: () => menus.settings(dialogue),
+      onSettings: () => menus.settings(configApi),
       onExit: () => menus.exit(),
       onSlot: (s) => { const st = loadGame(s); if (st) resumeFrom(st); },
     });
@@ -116,7 +141,7 @@ async function boot() {
 
   const nav = new NavRail(document.getElementById('navrail'), (key) => {
     if (key === 'settings') {
-      menus.settings(dialogue, {
+      menus.settings(configApi, {
         onSave: () => menus.saveLoad('save', { state, onLoaded: resumeFrom }),
         onLoad: () => menus.saveLoad('load', { state, onLoaded: resumeFrom }),
         onTitle: showTitle,

@@ -13,6 +13,7 @@
   --gold-bright: #e8c879;
   --gold-line: rgba(200, 162, 78, 0.45);
   --glass: rgba(12, 16, 24, 0.66);
+  --font-serif: 'Songti SC', 'STSong', Georgia, 'Noto Serif SC', 'SimSun', serif;
   --accent: #d98a2b;
   --branch: #e0a13a;
   --danger: #c0566a;
@@ -35,7 +36,7 @@ button { font-family: inherit; color: inherit; cursor: pointer; border: none; }
 
 .navrail {
   width: 68px; flex: none; background: var(--panel);
-  border-right: 1px solid var(--line);
+  border-right: 1px solid var(--gold-line);
   display: flex; flex-direction: column; align-items: center; gap: 8px;
   padding: 16px 0; z-index: 30;
 }
@@ -46,9 +47,9 @@ button { font-family: inherit; color: inherit; cursor: pointer; border: none; }
 }
 .nav-ic { display: inline-flex; }
 .nav-ic svg { width: 22px; height: 22px; }
-.nav-label { font-size: 11px; letter-spacing: 0.04em; }
-.nav-btn:hover { background: var(--panel-2); color: var(--ink); }
-.nav-btn.active { color: var(--amber); background: var(--panel-2); }
+.nav-label { font-size: 11px; letter-spacing: 0.04em; font-family: var(--font-serif); }
+.nav-btn:hover { background: rgba(40, 32, 18, 0.45); color: #d8cdb4; }
+.nav-btn.active { color: var(--gold-bright); background: rgba(40, 32, 18, 0.55); box-shadow: inset 0 0 0 1px var(--gold-line); }
 .nav-btn.badge::after {
   content: ''; position: absolute; top: 7px; right: 7px;
   width: 7px; height: 7px; border-radius: 50%; background: var(--danger);
@@ -56,7 +57,7 @@ button { font-family: inherit; color: inherit; cursor: pointer; border: none; }
 
 .panel {
   width: 340px; flex: none; background: var(--panel);
-  border-left: 1px solid var(--line);
+  border-left: 1px solid var(--gold-line);
   display: flex; flex-direction: column; min-height: 0; z-index: 20;
 }
 @media (max-width: 1000px) { .panel { width: 280px; } }

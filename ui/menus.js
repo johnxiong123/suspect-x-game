@@ -1,9 +1,7 @@
 // 菜单与弹层：标题 / 结局 / 章节末 / 存读档 / 设置 / 回想 / 结局画廊
 import { el } from './dom.js';
 import { asset } from '../engine/assets.js';
-import { listSaves, saveGame, loadGame, getProgress } from '../engine/state.js';
-import { getVolume, setVolume, isMuted, setMuted } from '../engine/audio.js';
-import { setEnabled as setSfxEnabled, isEnabled as isSfxEnabled } from '../engine/sfx.js';
+import { listSaves, saveGame, loadGame, getProgress } from '../engine/state.js?v=2';
 
 const I = {
   play: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M7 5l11 7-11 7z"/></svg>',
@@ -149,40 +147,62 @@ export class Menus {
     ], { dismissable: true });
   }
 
-  settings(dialogue, opts = {}) {
-    const speed = el('input', { type: 'range', min: '4', max: '60', value: String(70 - dialogue.speed), step: '2' });
-    speed.addEventListener('input', () => dialogue.setSpeed(70 - Number(speed.value)));
-    const auto = el('input', { type: 'checkbox' });
-    auto.checked = dialogue.auto;
-    auto.addEventListener('change', () => dialogue.setAuto(auto.checked));
-    const skip = el('input', { type: 'checkbox' });
-    skip.checked = dialogue.skip;
-    skip.addEventListener('change', () => dialogue.setSkip(skip.checked));
+  // config: { get(): cfg, set(patch) }（main.js 注入，改动即持久化并整体重应用）
+  // opts: { onSave?, onLoad?, onTitle? }（仅游戏内传入，标题画面不传）
+  settings(config, opts = {}) {
+    const c = config.get();
+    const rangeIn = (min, max, value, step, onInput) => {
+      const r = el('input', { type: 'range', min: String(min), max: String(max), value: String(value), step: String(step) });
+      r.addEventListener('input', () => onInput(Number(r.value)));
+      return r;
+    };
+    const checkIn = (checked, onChange) => {
+      const cb = el('input', { type: 'checkbox' });
+      cb.checked = !!checked;
+      cb.addEventListener('change', () => onChange(cb.checked));
+      return cb;
+    };
+    const row = (label, control) => el('label', { class: 'setting-row' }, [el('span', { text: label }), control]);
+    const group = (title, rows) => el('div', { class: 'setting-group' }, [el('div', { class: 'setting-group-h', text: title }), ...rows]);
 
-    const vol = el('input', { type: 'range', min: '0', max: '100', value: String(Math.round(getVolume() * 100)), step: '5' });
-    vol.addEventListener('input', () => setVolume(Number(vol.value) / 100));
-    const mute = el('input', { type: 'checkbox' });
-    mute.checked = isMuted();
-    mute.addEventListener('change', () => setMuted(mute.checked));
-    const sfx = el('input', { type: 'checkbox' });
-    sfx.checked = isSfxEnabled();
-    sfx.addEventListener('change', () => setSfxEnabled(sfx.checked));
+    const text = group('文本', [
+      row('文字速度', rangeIn(4, 60, 70 - c.textSpeed, 2, (v) => config.set({ textSpeed: 70 - v }))),
+      row('自动播放', checkIn(c.auto, (v) => config.set({ auto: v }))),
+      row('自动播放速度', rangeIn(0, 100, c.autoSpeed, 5, (v) => config.set({ autoSpeed: v }))),
+      row('快进（仅已读）', checkIn(c.skip, (v) => config.set({ skip: v }))),
+    ]);
+    const audio = group('音频', [
+      row('背景音乐', rangeIn(0, 100, Math.round(c.bgmVol * 100), 5, (v) => config.set({ bgmVol: v / 100 }))),
+      row('静音', checkIn(c.muted, (v) => config.set({ muted: v }))),
+      row('文字音效音量', rangeIn(0, 100, Math.round(c.sfxVol * 100), 5, (v) => config.set({ sfxVol: v / 100 }))),
+      row('文字音效', checkIn(c.sfxOn, (v) => config.set({ sfxOn: v }))),
+    ]);
 
-    const actions = [];
-    if (opts.onSave) actions.push(el('button', { class: 'menu-btn small', text: '保存', onclick: opts.onSave }));
-    if (opts.onLoad) actions.push(el('button', { class: 'menu-btn small', text: '读取', onclick: opts.onLoad }));
-    if (opts.onTitle) actions.push(el('button', { class: 'menu-btn small', text: '返回标题', onclick: opts.onTitle }));
+    const sys = [];
+    if (opts.onSave) sys.push(el('button', { class: 'menu-btn sys-btn', text: '保存进度', onclick: opts.onSave }));
+    if (opts.onLoad) sys.push(el('button', { class: 'menu-btn sys-btn', text: '读取进度', onclick: opts.onLoad }));
+    if (opts.onTitle) sys.push(el('button', {
+      class: 'menu-btn sys-btn danger', text: '返回标题',
+      onclick: () => this.confirm('返回标题？未保存的进度将丢失。', { onYes: opts.onTitle, yesText: '返回标题' }),
+    }));
 
     this._overlay('overlay-settings', [
       el('h3', { class: 'overlay-h', text: '设置' }),
-      el('label', { class: 'setting-row' }, [el('span', { text: '文字速度' }), speed]),
-      el('label', { class: 'setting-row' }, [el('span', { text: '自动播放' }), auto]),
-      el('label', { class: 'setting-row' }, [el('span', { text: '快进（仅已读）' }), skip]),
-      el('label', { class: 'setting-row' }, [el('span', { text: '音乐音量' }), vol]),
-      el('label', { class: 'setting-row' }, [el('span', { text: '静音' }), mute]),
-      el('label', { class: 'setting-row' }, [el('span', { text: '文字音效' }), sfx]),
-      actions.length ? el('div', { class: 'setting-actions' }, actions) : null,
+      text,
+      audio,
+      sys.length ? group('系统', sys) : null,
       el('button', { class: 'menu-btn', text: '关闭', onclick: (e) => e.target.closest('.overlay')?.remove() }),
+    ], { dismissable: true });
+  }
+
+  // 二次确认弹窗（返回标题/退出等破坏性操作）
+  confirm(message, { onYes, yesText = '确定', noText = '取消' } = {}) {
+    this._overlay('overlay-confirm', [
+      el('div', { class: 'confirm-msg', text: message }),
+      el('div', { class: 'confirm-actions' }, [
+        el('button', { class: 'menu-btn', text: noText, onclick: (e) => e.target.closest('.overlay')?.remove() }),
+        el('button', { class: 'menu-btn danger', text: yesText, onclick: (e) => { e.target.closest('.overlay')?.remove(); onYes && onYes(); } }),
+      ]),
     ], { dismissable: true });
   }
 
@@ -191,17 +211,26 @@ export class Menus {
     const saves = Object.fromEntries(listSaves().map((s) => [s.slot, s]));
     const rows = slots.map((slot) => {
       const info = saves[slot];
-      return el('div', { class: 'slot-row' }, [
-        el('span', { class: 'slot-name', text: '存档 ' + slot }),
-        el('span', { class: 'slot-info', text: info ? `${info.node || ''} · ${(info.at || '').slice(0, 16).replace('T', ' ')}` : '（空）' }),
-        el('button', {
+      const thumbSrc = info && info.bg ? asset(info.bg)?.src : null;
+      const thumb = thumbSrc
+        ? el('div', { class: 'slot-thumb', style: `background-image:url("${thumbSrc}")` })
+        : el('div', { class: 'slot-thumb empty', text: slot });
+      const meta = el('div', { class: 'slot-meta' }, [
+        el('div', { class: 'slot-name', text: '存档 ' + slot }),
+        el('div', { class: 'slot-info', text: info ? (info.chapterTitle || info.node || '') : '（空档位）' }),
+        el('div', { class: 'slot-time', text: info ? (info.at || '').slice(0, 16).replace('T', ' ') : '' }),
+      ]);
+      const canAct = mode === 'save' || !!info;
+      return el('div', { class: 'slot-row' + (info ? '' : ' empty') }, [
+        thumb, meta,
+        canAct ? el('button', {
           class: 'menu-btn small',
           text: mode === 'save' ? '保存' : '读取',
           onclick: () => {
             if (mode === 'save') { saveGame(slot, state); this.saveLoad('save', { state, onLoaded }); }
             else { const s = loadGame(slot); if (s) { this.closeAll(); onLoaded(s); } }
           },
-        }),
+        }) : el('span', { class: 'slot-empty-tag', text: '空' }),
       ]);
     });
     this.root.querySelectorAll('.overlay-saveload').forEach((o) => o.remove());

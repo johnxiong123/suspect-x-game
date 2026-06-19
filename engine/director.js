@@ -21,7 +21,11 @@ export class Director {
       this.chapter = await loadChapter(chId);
       this.ctx.onChapterLoad?.(this.chapter);
     }
-    this.ctx.state.current = { chapter: chId, node: nodeId };
+    this.ctx.state.current = {
+      chapter: chId, node: nodeId,
+      bg: this.ctx.state.current?.bg || null,
+      chapterTitle: this.chapter.meta.title,
+    };
     await this.runNode(nodeId);
   }
 
@@ -37,7 +41,7 @@ export class Director {
     this._refreshHud(newClues);
 
     this.ctx.scene.set(node.bg, node.cg, node.pov);
-    if (node.bg) state.locations.add(node.bg);
+    if (node.bg) { state.locations.add(node.bg); state.current.bg = node.cg || node.bg; }
     this.ctx.flowchart?.update(this.chapter, state, this);
     this.ctx.onNode?.(nodeId, this.chapter);
 

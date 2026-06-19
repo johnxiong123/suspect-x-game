@@ -5,14 +5,15 @@ export class Panel {
   constructor(root) {
     this.root = root;
     this.tabsEl = el('div', { class: 'panel-tabs' });
+    this.clueLabel = el('div', { class: 'panel-section-label clue-section', text: '关键证物' });
     this.cluesHost = el('div', { class: 'clue-grid' });
     this.charHost = el('div', { class: 'char-list', style: 'display:none' });
     this.detailHost = el('div', { class: 'clue-detail' });
     this.flowHost = el('div', { class: 'flowchart' });
 
-    const top = el('div', { class: 'panel-top' }, [this.tabsEl, this.cluesHost, this.charHost, this.detailHost]);
+    const top = el('div', { class: 'panel-top' }, [this.tabsEl, this.clueLabel, this.cluesHost, this.charHost, this.detailHost]);
     const bottom = el('div', { class: 'panel-bottom' }, [
-      el('div', { class: 'panel-section-label', text: '流程图 · 路线' }),
+      el('div', { class: 'panel-section-label', text: '路线图' }),
       this.flowHost,
     ]);
     this.root.append(top, bottom);
@@ -30,6 +31,7 @@ export class Panel {
 
   switchTab(k) {
     Object.entries(this.tabBtns).forEach(([key, b]) => b.classList.toggle('active', key === k));
+    this.clueLabel.style.display = k === 'clues' ? '' : 'none';
     this.cluesHost.style.display = k === 'clues' ? '' : 'none';
     this.charHost.style.display = k === 'characters' ? '' : 'none';
     this.detailHost.classList.remove('show');
