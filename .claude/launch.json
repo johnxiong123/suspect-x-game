@@ -3,8 +3,8 @@
   "configurations": [
     {
       "name": "sx-game",
-      "runtimeExecutable": "python3",
-      "runtimeArgs": ["-m", "http.server", "8099"],
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["scripts/serve.mjs", "8099"],
       "port": 8099
     }
   ]

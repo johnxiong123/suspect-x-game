@@ -30,17 +30,19 @@ button { font-family: inherit; color: inherit; cursor: pointer; border: none; }
 .stage { position: relative; flex: 1; min-width: 0; background: var(--stage); overflow: hidden; }
 
 .navrail {
-  width: 56px; flex: none; background: var(--panel);
+  width: 68px; flex: none; background: var(--panel);
   border-right: 1px solid var(--line);
-  display: flex; flex-direction: column; align-items: center; gap: 6px;
-  padding: 14px 0; z-index: 30;
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  padding: 16px 0; z-index: 30;
 }
 .nav-btn {
-  width: 40px; height: 40px; border-radius: 10px; background: transparent;
-  color: var(--muted); display: flex; align-items: center; justify-content: center;
+  width: 56px; padding: 8px 0; border-radius: 10px; background: transparent;
+  color: var(--muted); display: flex; flex-direction: column; align-items: center; gap: 4px;
   position: relative; transition: 0.15s;
 }
-.nav-btn svg { width: 22px; height: 22px; }
+.nav-ic { display: inline-flex; }
+.nav-ic svg { width: 22px; height: 22px; }
+.nav-label { font-size: 11px; letter-spacing: 0.04em; }
 .nav-btn:hover { background: var(--panel-2); color: var(--ink); }
 .nav-btn.active { color: var(--amber); background: var(--panel-2); }
 .nav-btn.badge::after {

@@ -44,6 +44,7 @@ async function boot() {
   const clues = new Clues(panel.cluesHost, cluesData);
   clues.setDetailHost(panel.detailHost);
   const flowchart = new Flowchart(panel.flowHost);
+  panel.setCharacters(charData);
   const menus = new Menus(document.getElementById('overlays'));
   const chapterLabel = document.getElementById('chapter-label');
 
@@ -109,10 +110,6 @@ async function boot() {
       });
     } else if (key === 'log') {
       menus.backlog(dialogue);
-    } else if (key === 'characters') {
-      panel.showCharacters(charData);
-    } else if (key === 'flowchart') {
-      panel.focusFlow();
     } else if (key === 'map') {
       if (state) menus.locations(state);
     }

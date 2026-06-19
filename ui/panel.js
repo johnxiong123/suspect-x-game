@@ -35,7 +35,7 @@ export class Panel {
     this.detailHost.classList.remove('show');
   }
 
-  showCharacters(list) {
+  setCharacters(list) {
     this.charHost.innerHTML = '';
     list.forEach((c) => {
       this.charHost.appendChild(el('div', { class: 'char-card' }, [
@@ -47,8 +47,8 @@ export class Panel {
         ]),
       ]));
     });
-    this.switchTab('characters');
   }
+  showCharacters(list) { this.setCharacters(list); this.switchTab('characters'); }
 
   focusFlow() { this.root.classList.remove('collapsed'); this.flowHost.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
 }

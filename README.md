@@ -39,8 +39,10 @@
 ## 🎮 运行
 
 ```bash
-# 需要通过 http 打开（用到 ES Module + fetch），不要直接 file:// 双击
-python3 -m http.server 8099
+# 推荐：零依赖 no-cache 静态服务器（开发期永远加载最新代码，免硬刷新）
+node scripts/serve.mjs 8099
+# 或：python3 -m http.server 8099（注意浏览器会缓存 JS，改动后需 Cmd+Shift+R 硬刷新）
+
 # 然后浏览器访问 http://localhost:8099
 ```
 
