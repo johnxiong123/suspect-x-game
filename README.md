@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="assets/images/cover_icons/title_keyvisual.png" alt="嫌疑犯X的献身 · 互动推理" width="100%">
+<img src="docs/screenshot-title.png" alt="嫌疑犯X的献身 · 互动推理 — 标题界面" width="100%">
 
 # 嫌疑犯X的献身 · 互动推理
 
