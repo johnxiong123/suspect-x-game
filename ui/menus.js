@@ -2,6 +2,16 @@
 import { el } from './dom.js';
 import { asset } from '../engine/assets.js';
 import { listSaves, saveGame, loadGame, getProgress } from '../engine/state.js';
+import { getVolume, setVolume, isMuted, setMuted } from '../engine/audio.js';
+
+const I = {
+  play: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M7 5l11 7-11 7z"/></svg>',
+  cont: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 12a8 8 0 1 1 2.4 5.6"/><path d="M4 19v-5h5"/></svg>',
+  chapters: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="4" y="4" width="7" height="7" rx="1"/><rect x="13" y="4" width="7" height="7" rx="1"/><rect x="4" y="13" width="7" height="7" rx="1"/><rect x="13" y="13" width="7" height="7" rx="1"/></svg>',
+  gallery: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 15l5-4 4 3 3-2 6 4"/></svg>',
+  gear: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="3"/><path d="M12 3v2.5M12 18.5V21M3 12h2.5M18.5 12H21M5.2 5.2l1.8 1.8M17 17l1.8 1.8M18.8 5.2L17 7M7 17l-1.8 1.8"/></svg>',
+  power: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3v9"/><path d="M6.5 7a8 8 0 1 0 11 0"/></svg>',
+};
 
 export class Menus {
   constructor(root) { this.root = root; }
@@ -16,23 +26,57 @@ export class Menus {
     return ov;
   }
 
-  title({ hasSave, onStart, onContinue, onGallery, onSettings }) {
+  title({ hasSave, onStart, onContinue, onChapterSelect, onGallery, onSettings, onExit }) {
     this.closeAll();
     const kv = asset('title_keyvisual');
-    const visual = kv && kv.src
-      ? el('img', { class: 'title-visual', src: kv.src })
-      : el('div', { class: 'title-visual title-visual-ph' });
-    this._overlay('overlay-title', [
-      visual,
-      el('h1', { class: 'title-name', text: '嫌疑犯X的献身' }),
-      el('p', { class: 'title-sub', text: '互动推理 · 你的选择，改变命运' }),
-      el('div', { class: 'title-menu' }, [
-        el('button', { class: 'menu-btn primary', text: '开始新游戏', onclick: onStart }),
-        hasSave ? el('button', { class: 'menu-btn', text: '继续', onclick: onContinue }) : null,
-        el('button', { class: 'menu-btn', text: '结局画廊', onclick: onGallery }),
-        el('button', { class: 'menu-btn', text: '设置', onclick: onSettings }),
-      ]),
+    const ov = el('div', { class: 'overlay overlay-title' });
+    if (kv && kv.src) ov.style.backgroundImage = `url("${kv.src}")`;
+    else ov.classList.add('overlay-title-ph');
+
+    const item = (label, icon, handler, cls = '') => el('button', {
+      class: 'title-item' + (cls ? ' ' + cls : ''), onclick: handler,
+    }, [el('span', { class: 'title-item-ic', html: icon }), el('span', { text: label })]);
+
+    const menu = el('div', { class: 'title-menu-right' }, [
+      item('开始游戏', I.play, onStart, 'primary'),
+      hasSave ? item('继续游戏', I.cont, onContinue) : null,
+      item('章节选择', I.chapters, onChapterSelect),
+      onGallery ? item('结局画廊', I.gallery, onGallery) : null,
+      item('设定', I.gear, onSettings),
+      item('结束游戏', I.power, onExit),
     ]);
+    ov.append(el('div', { class: 'title-brand', text: '嫌疑犯X的献身' }), menu);
+    this.root.appendChild(ov);
+  }
+
+  chapterSelect(chapters, { onPick }) {
+    const rows = chapters.map((c) => el('button', {
+      class: 'chapter-row', onclick: () => { this.closeAll(); onPick(c.id); },
+    }, [el('span', { class: 'chapter-row-title', text: c.title })]));
+    this._overlay('overlay-chapters', [
+      el('h3', { class: 'overlay-h', text: '章节选择' }),
+      el('div', { class: 'chapter-list' }, rows),
+      el('button', { class: 'menu-btn', text: '关闭', onclick: (e) => e.target.closest('.overlay')?.remove() }),
+    ], { dismissable: true });
+  }
+
+  locations(state) {
+    const names = [...(state.locations || [])].map((id) => asset(id)?.label || id);
+    this._overlay('overlay-locations', [
+      el('h3', { class: 'overlay-h', text: '已到访地点' }),
+      el('div', { class: 'loc-list' }, names.length
+        ? names.map((n) => el('div', { class: 'loc-row', text: n }))
+        : [el('div', { class: 'clue-empty', text: '暂无' })]),
+      el('button', { class: 'menu-btn', text: '关闭', onclick: (e) => e.target.closest('.overlay')?.remove() }),
+    ], { dismissable: true });
+  }
+
+  exit() {
+    this._overlay('overlay-exit', [
+      el('h2', { class: 'end-title', text: '感谢游玩' }),
+      el('p', { class: 'title-sub', text: '可以直接关闭此页面。' }),
+      el('button', { class: 'menu-btn', text: '返回', onclick: (e) => e.target.closest('.overlay')?.remove() }),
+    ], { dismissable: true });
   }
 
   ending(ending, { onTitle }) {
@@ -77,6 +121,12 @@ export class Menus {
     skip.checked = dialogue.skip;
     skip.addEventListener('change', () => dialogue.setSkip(skip.checked));
 
+    const vol = el('input', { type: 'range', min: '0', max: '100', value: String(Math.round(getVolume() * 100)), step: '5' });
+    vol.addEventListener('input', () => setVolume(Number(vol.value) / 100));
+    const mute = el('input', { type: 'checkbox' });
+    mute.checked = isMuted();
+    mute.addEventListener('change', () => setMuted(mute.checked));
+
     const actions = [];
     if (opts.onSave) actions.push(el('button', { class: 'menu-btn small', text: '保存', onclick: opts.onSave }));
     if (opts.onLoad) actions.push(el('button', { class: 'menu-btn small', text: '读取', onclick: opts.onLoad }));
@@ -87,6 +137,8 @@ export class Menus {
       el('label', { class: 'setting-row' }, [el('span', { text: '文字速度' }), speed]),
       el('label', { class: 'setting-row' }, [el('span', { text: '自动播放' }), auto]),
       el('label', { class: 'setting-row' }, [el('span', { text: '快进（仅已读）' }), skip]),
+      el('label', { class: 'setting-row' }, [el('span', { text: '音乐音量' }), vol]),
+      el('label', { class: 'setting-row' }, [el('span', { text: '静音' }), mute]),
       actions.length ? el('div', { class: 'setting-actions' }, actions) : null,
       el('button', { class: 'menu-btn', text: '关闭', onclick: (e) => e.target.closest('.overlay')?.remove() }),
     ], { dismissable: true });

@@ -38,6 +38,7 @@ export class GameState {
     this.clues = new Set();
     this.povUnlocked = new Set(['ishigami']);
     this.visited = new Set();
+    this.locations = new Set();
     this.endings = new Set();
     this.current = { chapter: null, node: null };
   }
@@ -74,6 +75,7 @@ export class GameState {
       clues: [...this.clues],
       povUnlocked: [...this.povUnlocked],
       visited: [...this.visited],
+      locations: [...this.locations],
       endings: [...this.endings],
       current: { ...this.current },
     };
@@ -86,6 +88,7 @@ export class GameState {
     s.clues = new Set(o.clues || []);
     s.povUnlocked = new Set(o.povUnlocked || ['ishigami']);
     s.visited = new Set(o.visited || []);
+    s.locations = new Set(o.locations || []);
     s.endings = new Set(o.endings || []);
     s.current = o.current || { chapter: null, node: null };
     return s;

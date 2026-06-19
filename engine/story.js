@@ -9,7 +9,7 @@ export function chapterIdOf(nodeId) {
 
 export async function loadChapter(id) {
   if (cache.has(id)) return cache.get(id);
-  const res = await fetch(`data/chapters/${id}.json`);
+  const res = await fetch(`data/chapters/${id}.json`, { cache: 'no-store' });
   if (!res.ok) throw new Error(`无法加载章节 ${id}: ${res.status}`);
   const data = await res.json();
   cache.set(id, data);

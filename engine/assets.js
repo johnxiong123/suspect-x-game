@@ -4,7 +4,7 @@ let manifest = { images: {} };
 
 export async function loadManifest() {
   try {
-    const res = await fetch('assets/manifest.json');
+    const res = await fetch('assets/manifest.json', { cache: 'no-store' });
     if (res.ok) manifest = await res.json();
   } catch {
     manifest = { images: {} };

@@ -37,6 +37,7 @@ export class Director {
     this._refreshHud(newClues);
 
     this.ctx.scene.set(node.bg, node.cg, node.pov);
+    if (node.bg) state.locations.add(node.bg);
     this.ctx.flowchart?.update(this.chapter, state, this);
     this.ctx.onNode?.(nodeId, this.chapter);
 

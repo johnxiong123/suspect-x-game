@@ -123,3 +123,21 @@
 .gallery-tag { font-size: 10px; letter-spacing: 0.2em; color: var(--faint); }
 .gallery-title { font-size: 14px; margin: 4px 0; }
 .gallery-sum { font-size: 12px; color: var(--muted); line-height: 1.6; }
+
+/* ===== 标题：全屏封面 + 右侧菜单 ===== */
+.overlay-title { display: block; background-color: #05070a; background-size: cover; background-position: center; background-repeat: no-repeat; backdrop-filter: none; }
+.overlay-title.overlay-title-ph { background: radial-gradient(120% 120% at 30% 30%, #1d2733, #0b0f15); }
+.title-brand { position: absolute; top: 30px; left: 36px; font-size: 22px; letter-spacing: 0.18em; color: #fff; text-shadow: 0 2px 14px rgba(0, 0, 0, 0.85); }
+.title-menu-right { position: absolute; right: 48px; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 10px; width: 290px; }
+.title-item { display: flex; align-items: center; gap: 12px; padding: 13px 18px; background: rgba(10, 14, 20, 0.55); border: 1px solid rgba(255, 255, 255, 0.14); border-radius: 10px; color: #e9edf3; font-size: 16px; text-align: left; backdrop-filter: blur(4px); transition: 0.15s; }
+.title-item:hover { background: rgba(34, 42, 54, 0.82); border-color: var(--amber); transform: translateX(-4px); }
+.title-item.primary { border-color: var(--amber); background: linear-gradient(to right, rgba(185, 128, 58, 0.88), rgba(154, 106, 46, 0.7)); color: #fff; }
+.title-item-ic { display: inline-flex; width: 20px; height: 20px; color: var(--amber); flex: none; }
+.title-item-ic svg { width: 20px; height: 20px; }
+.title-item.primary .title-item-ic { color: #fff; }
+
+/* 章节选择 / 已到访地点 */
+.chapter-list, .loc-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; max-height: 52vh; overflow-y: auto; text-align: left; }
+.chapter-row { display: flex; align-items: center; background: var(--panel-2); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; color: var(--ink); font-size: 15px; transition: 0.15s; }
+.chapter-row:hover { border-color: var(--amber); background: #222b38; }
+.loc-row { background: var(--panel-2); border: 1px solid var(--line); border-radius: 8px; padding: 9px 12px; font-size: 14px; color: var(--ink); }

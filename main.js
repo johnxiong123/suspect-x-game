@@ -10,18 +10,29 @@ import { Flowchart } from './ui/flowchart.js';
 import { NavRail } from './ui/navrail.js';
 import { Panel } from './ui/panel.js';
 import { Menus } from './ui/menus.js';
+import { loadAudioManifest, playTrack, resume } from './engine/audio.js';
 
 const START = 'ch01_001';
 const AUTO = 'auto';
+const CHAPTERS = [
+  { id: 'ch01', title: '第一章 · 黄昏的访客' },
+  { id: 'ch02', title: '第二章 · 河岸的发现' },
+  { id: 'ch03', title: '第三章 · 旧友' },
+  { id: 'ch04', title: '第四章 · 情敌' },
+  { id: 'ch05', title: '第五章 · 罗网' },
+  { id: 'ch06', title: '第六章 · 识破' },
+  { id: 'ch07', title: '终章 · 献身' },
+];
 
 async function getJSON(path) {
-  const r = await fetch(path);
+  const r = await fetch(path, { cache: 'no-store' });
   if (!r.ok) throw new Error('加载失败: ' + path);
   return r.json();
 }
 
 async function boot() {
   await loadManifest();
+  await loadAudioManifest();
   const cluesData = await getJSON('data/clues.json');
   const charData = await getJSON('data/characters.json');
   const endingsData = await getJSON('data/endings.json');
@@ -42,7 +53,7 @@ async function boot() {
   function buildDirector() {
     director = new Director({
       state, scene, dialogue, status, clues, flowchart,
-      onChapterLoad: (ch) => { chapterLabel.textContent = ch.meta.title; },
+      onChapterLoad: (ch) => { chapterLabel.textContent = ch.meta.title; playTrack(ch.meta.bgm || 'main'); },
       onNode: () => { saveGame(AUTO, state); },
       onEnding: (ending) => { saveGame(AUTO, state); menus.ending(ending, { onTitle: showTitle }); },
       onChapterEnd: (ch) => { saveGame(AUTO, state); menus.chapterEnd(ch, { onTitle: showTitle }); },
@@ -69,13 +80,23 @@ async function boot() {
     const s = loadGame(AUTO);
     resumeFrom(s || new GameState());
   }
+  function startChapter(chId) {
+    state = new GameState();
+    buildDirector();
+    menus.closeAll();
+    syncHud();
+    director.start(chId + '_001');
+  }
   function showTitle() {
+    playTrack('title');
     menus.title({
       hasSave: !!loadGame(AUTO),
       onStart: startNew,
       onContinue: continueAuto,
+      onChapterSelect: () => menus.chapterSelect(CHAPTERS, { onPick: startChapter }),
       onGallery: () => menus.gallery(endingsData),
       onSettings: () => menus.settings(dialogue),
+      onExit: () => menus.exit(),
     });
   }
 
@@ -92,9 +113,15 @@ async function boot() {
       panel.showCharacters(charData);
     } else if (key === 'flowchart') {
       panel.focusFlow();
+    } else if (key === 'map') {
+      if (state) menus.locations(state);
     }
-    // 'map' 预留给 P2
   });
+
+  // 首次用户交互后补放被浏览器拦截的 BGM
+  const unlock = () => { resume(); window.removeEventListener('pointerdown', unlock); window.removeEventListener('keydown', unlock); };
+  window.addEventListener('pointerdown', unlock);
+  window.addEventListener('keydown', unlock);
 
   showTitle();
 }
