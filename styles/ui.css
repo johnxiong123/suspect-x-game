@@ -267,6 +267,8 @@ input[type="checkbox"]:checked::after { content: ''; position: absolute; left: 5
 .qm-label { font-size: 11px; letter-spacing: 0.08em; font-family: var(--font-serif); }
 .qm-btn:hover { border-color: var(--gold-bright); color: #fff; transform: translateY(-1px); }
 .qm-toggle.on { color: #1a130a; background: linear-gradient(180deg, var(--gold-bright), var(--gold)); border-color: var(--gold-bright); box-shadow: 0 0 12px rgba(200, 162, 78, 0.4); }
+/* 选项出现时隐藏快捷条，避免遮挡选项 */
+.stage:has(.dlg-choices.show) .quickbar { display: none; }
 
 /* ===== 设置：分区 + 系统大按钮 ===== */
 .setting-group { text-align: left; }

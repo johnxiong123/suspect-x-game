@@ -1,7 +1,7 @@
 // 启动与装配：把引擎与各 UI 组件接到一起
 import { GameState, saveGame, loadGame, listSaves, getProgress } from './engine/state.js?v=2';
 import { Director } from './engine/director.js?v=2';
-import { loadManifest } from './engine/assets.js';
+import { loadManifest, prewarmImages } from './engine/assets.js';
 import { loadConfig, getConfig, setConfig } from './engine/config.js';
 import { Scene } from './ui/scene.js';
 import { Dialogue } from './ui/dialogue.js?v=2';
@@ -159,6 +159,8 @@ async function boot() {
   window.addEventListener('keydown', unlock);
 
   showTitle();
+  // 标题渲染后，后台预热场景图片（不阻塞首屏），使进场/切场即时显示
+  setTimeout(prewarmImages, 600);
 }
 
 boot().catch((e) => {
