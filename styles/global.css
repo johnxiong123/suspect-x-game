@@ -9,6 +9,10 @@
   --line: rgba(255, 255, 255, 0.10);
   --line-2: rgba(255, 255, 255, 0.18);
   --amber: #d3a05a;
+  --gold: #c8a24e;
+  --gold-bright: #e8c879;
+  --gold-line: rgba(200, 162, 78, 0.45);
+  --glass: rgba(12, 16, 24, 0.66);
   --accent: #d98a2b;
   --branch: #e0a13a;
   --danger: #c0566a;

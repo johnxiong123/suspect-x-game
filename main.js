@@ -1,5 +1,5 @@
 // 启动与装配：把引擎与各 UI 组件接到一起
-import { GameState, saveGame, loadGame } from './engine/state.js';
+import { GameState, saveGame, loadGame, listSaves, getProgress } from './engine/state.js';
 import { Director } from './engine/director.js';
 import { loadManifest } from './engine/assets.js';
 import { Scene } from './ui/scene.js';
@@ -90,16 +90,27 @@ async function boot() {
     syncHud();
     director.start(chId + '_001');
   }
+  const chapterTitleOf = (id) => { const c = CHAPTERS.find((x) => x.id === id); return c ? c.title : ''; };
   function showTitle() {
     playTrack('title');
+    const autoState = loadGame(AUTO);
+    const autoInfo = listSaves().find((s) => s.slot === AUTO);
+    const curCh = autoState && autoState.current && autoState.current.chapter;
+    const prog = getProgress();
     menus.title({
-      hasSave: !!loadGame(AUTO),
+      hasSave: !!autoState,
+      save: autoInfo ? { sub: `${(autoInfo.at || '').slice(0, 16).replace('T', ' ')} · ${chapterTitleOf(curCh) || CHAPTERS[0].title}` } : null,
+      progress: { sub: `当前进度 ${chapterTitleOf(curCh) || CHAPTERS[0].title}` },
+      endings: { sub: `已解锁 ${prog.endings.length} / ${endingsData.length}` },
+      slots: true,
+      activeSlot: null,
       onStart: startNew,
       onContinue: continueAuto,
       onChapterSelect: () => menus.chapterSelect(CHAPTERS, { onPick: startChapter }),
       onGallery: () => menus.gallery(endingsData),
       onSettings: () => menus.settings(dialogue),
       onExit: () => menus.exit(),
+      onSlot: (s) => { const st = loadGame(s); if (st) resumeFrom(st); },
     });
   }
 
