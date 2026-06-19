@@ -1,6 +1,6 @@
 {
   "tracks": {
-    "title":  { "label": "标题 · 主题", "src": null },
+    "title":  { "label": "标题 · 主题", "src": "assets/audio/title.mp3" },
     "main":   { "label": "日常 · 推进", "src": null },
     "tense":  { "label": "紧张 · 调查", "src": null },
     "sad":    { "label": "悲怆 · 终章", "src": null }
