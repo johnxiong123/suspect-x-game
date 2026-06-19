@@ -46,10 +46,13 @@ export function blip() {
     const s = c.createBufferSource();
     s.buffer = typeBuffer;
     const g = c.createGain();
-    g.gain.value = 0.5;
+    const tail = Math.min(0.12, typeBuffer.duration); // 只取开头的实际发声段，避免长静音尾叠加
+    g.gain.setValueAtTime(0.5, now);
+    g.gain.exponentialRampToValueAtTime(0.0001, now + tail);
     s.connect(g);
     g.connect(c.destination);
     s.start(now);
+    s.stop(now + tail + 0.02);
     return;
   }
 
