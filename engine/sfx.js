@@ -2,6 +2,7 @@
 let ctx = null;
 let enabled = true;
 let lastT = 0;
+let typeBuffer = null; // 可选：打字采样音（自然，优先于合成）
 
 function ac() {
   if (!ctx) {
@@ -20,6 +21,17 @@ export function unlock() {
 export function setEnabled(v) { enabled = !!v; }
 export function isEnabled() { return enabled; }
 
+// 载入可选的打字采样音（mp3/wav）；失败则保持用合成音
+export async function loadType(src) {
+  if (!src) return;
+  const c = ac();
+  if (!c) return;
+  try {
+    const arr = await (await fetch(src, { cache: 'no-store' })).arrayBuffer();
+    typeBuffer = await c.decodeAudioData(arr);
+  } catch { typeBuffer = null; }
+}
+
 // 播放一声打字"嗒"声：短促的带通滤波白噪声（非音调，像打字机/文字音），自带节流
 export function blip() {
   if (!enabled) return;
@@ -28,6 +40,18 @@ export function blip() {
   const now = c.currentTime;
   if (now - lastT < 0.05) return; // 节流
   lastT = now;
+
+  // 有采样音则优先播放（听感自然）
+  if (typeBuffer) {
+    const s = c.createBufferSource();
+    s.buffer = typeBuffer;
+    const g = c.createGain();
+    g.gain.value = 0.5;
+    s.connect(g);
+    g.connect(c.destination);
+    s.start(now);
+    return;
+  }
 
   const dur = 0.022;
   const buf = c.createBuffer(1, Math.ceil(c.sampleRate * dur), c.sampleRate);

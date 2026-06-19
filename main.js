@@ -11,7 +11,7 @@ import { NavRail } from './ui/navrail.js';
 import { Panel } from './ui/panel.js';
 import { Menus } from './ui/menus.js';
 import { loadAudioManifest, playTrack, resume } from './engine/audio.js';
-import { unlock as unlockSfx } from './engine/sfx.js';
+import { unlock as unlockSfx, loadType as loadTypeSfx } from './engine/sfx.js';
 
 const START = 'ch01_001';
 const AUTO = 'auto';
@@ -33,7 +33,8 @@ async function getJSON(path) {
 
 async function boot() {
   await loadManifest();
-  await loadAudioManifest();
+  const audioManifest = await loadAudioManifest();
+  loadTypeSfx(audioManifest.sfx?.type);
   const cluesData = await getJSON('data/clues.json');
   const charData = await getJSON('data/characters.json');
   const endingsData = await getJSON('data/endings.json');
