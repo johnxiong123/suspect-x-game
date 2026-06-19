@@ -38,20 +38,27 @@ export class Menus {
     if (kv && kv.src) ov.style.backgroundImage = `url("${kv.src}")`;
     else ov.classList.add('overlay-title-ph');
 
-    const item = (label, icon, handler, opt = {}) => el('button', {
-      class: 'title-item' + (opt.cls ? ' ' + opt.cls : ''), onclick: handler,
-    }, [
-      el('span', { class: 'title-item-ic', html: icon }),
-      el('span', { class: 'title-item-body' }, [
+    const item = (label, icon, handler, opt = {}) => {
+      const primary = opt.cls === 'primary';
+      const body = el('span', { class: 'title-item-body' }, [
         el('span', { class: 'title-item-label', text: label }),
         opt.sub ? el('span', { class: 'title-item-sub', text: opt.sub }) : null,
-      ]),
-    ]);
+        opt.diamonds ? el('span', { class: 'title-progress' },
+          Array.from({ length: opt.diamonds.total }, (_, k) => el('i', k < opt.diamonds.done ? { class: 'on' } : {}))) : null,
+      ]);
+      return el('button', {
+        class: 'title-item' + (opt.cls ? ' ' + opt.cls : '') + (primary ? ' ornate' : ''), onclick: handler,
+      }, [
+        primary ? el('span', { class: 'frame' }) : null,
+        el('span', { class: 'title-item-ic', html: icon }),
+        body,
+      ]);
+    };
 
     const menu = el('div', { class: 'title-menu-right' }, [
       item('开始游戏', I.play, onStart, { cls: 'primary' }),
       hasSave ? item('继续游戏', I.cont, onContinue, { sub: save && save.sub }) : null,
-      item('章节选择', I.chapters, onChapterSelect, { sub: progress && progress.sub }),
+      item('章节选择', I.chapters, onChapterSelect, { sub: progress && progress.sub, diamonds: progress && progress.diamonds }),
       onGallery ? item('结局画廊', I.gallery, onGallery, { sub: endings && endings.sub }) : null,
       item('设置', I.gear, onSettings),
       item('结束游戏', I.power, onExit),
@@ -61,16 +68,21 @@ export class Menus {
           class: 'slot-chip' + (String(activeSlot) === s ? ' active' : ''),
           text: '0' + s, onclick: () => onSlot && onSlot(s),
         })),
+        el('span', { class: 'title-slots-arrow', text: '›' }),
       ]) : null,
     ]);
 
     ov.append(
       el('div', { class: 'title-headblock' }, [
         el('div', { class: 'title-brand', html: '嫌疑犯<span class="x">X</span>的献身' }),
+        el('div', { class: 'title-divider' }, [el('span', {})]),
         el('div', { class: 'title-tagline', text: '真相是一种渴望救赎的诡计' }),
       ]),
       menu,
-      el('div', { class: 'title-quote', text: '我平凡，渺小，微不足道。但这也许就是我能做的一切了。' }),
+      el('div', { class: 'title-quote ornate' }, [
+        el('span', { class: 'frame' }),
+        el('span', { text: '我平凡，渺小，微不足道。但这也许就是我能做的一切了。' }),
+      ]),
     );
     this.root.appendChild(ov);
   }

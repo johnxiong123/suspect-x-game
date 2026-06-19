@@ -159,3 +159,43 @@
 .chapter-row { display: flex; align-items: center; background: var(--panel-2); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; color: var(--ink); font-size: 15px; transition: 0.15s; }
 .chapter-row:hover { border-color: var(--amber); background: #222b38; }
 .loc-row { background: var(--panel-2); border: 1px solid var(--line); border-radius: 8px; padding: 9px 12px; font-size: 14px; color: var(--ink); }
+
+/* ===== 标题：高保真描金（覆盖增强） ===== */
+.title-headblock { top: 7%; }
+.title-brand { font-family: var(--font-serif); font-size: 54px; letter-spacing: 0.14em; color: #f4ecd8; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6), 0 8px 28px rgba(0, 0, 0, 0.85); }
+.title-brand .x { color: #c0392b; text-shadow: 0 0 16px rgba(192, 57, 43, 0.55); }
+.title-divider { margin: 16px 0 12px; width: 320px; max-width: 80%; height: 8px; position: relative; }
+.title-divider::before { content: ''; position: absolute; top: 50%; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, var(--gold), rgba(200, 162, 78, 0.04)); }
+.title-divider span { position: absolute; top: 50%; left: 0; width: 8px; height: 8px; transform: translateY(-50%) rotate(45deg); background: var(--gold-bright); box-shadow: 0 0 8px rgba(232, 200, 121, 0.6); }
+.title-tagline { margin-top: 0; border-top: 0; padding-top: 0; font-size: 14px; letter-spacing: 0.34em; opacity: 0.9; }
+
+.title-item { gap: 16px; padding: 14px 20px; border-radius: 3px; background: linear-gradient(180deg, rgba(22, 26, 34, 0.78), rgba(9, 12, 18, 0.85)); box-shadow: inset 0 0 0 1px rgba(200, 162, 78, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.04); }
+.title-item:hover { box-shadow: inset 0 0 0 1px rgba(232, 200, 121, 0.3), 0 4px 18px rgba(0, 0, 0, 0.4); }
+.title-item.primary { background: linear-gradient(180deg, rgba(86, 64, 30, 0.9), rgba(44, 32, 15, 0.94)); border-color: var(--gold-bright); box-shadow: inset 0 0 0 1px rgba(232, 200, 121, 0.4), inset 0 1px 0 rgba(255, 230, 170, 0.15), 0 0 26px rgba(200, 162, 78, 0.22), 0 8px 30px rgba(0, 0, 0, 0.55); }
+
+/* 四角花纹：.ornate + 内部 .frame 提供 4 个角 */
+.ornate { position: relative; }
+.ornate > .frame { position: absolute; inset: 0; pointer-events: none; }
+.ornate::before, .ornate::after, .ornate > .frame::before, .ornate > .frame::after { content: ''; position: absolute; width: 13px; height: 13px; border: 2px solid var(--gold-bright); }
+.ornate::before { top: 5px; left: 5px; border-right: 0; border-bottom: 0; }
+.ornate::after { bottom: 5px; right: 5px; border-left: 0; border-top: 0; }
+.ornate > .frame::before { top: 5px; right: 5px; border-left: 0; border-bottom: 0; }
+.ornate > .frame::after { bottom: 5px; left: 5px; border-right: 0; border-top: 0; }
+
+/* 图标放进小圆框 */
+.title-item-ic { width: 32px; height: 32px; border-radius: 50%; align-items: center; justify-content: center; border: 1px solid var(--gold-line); background: rgba(0, 0, 0, 0.25); }
+.title-item-ic svg { width: 17px; height: 17px; }
+.title-item.primary .title-item-ic { border-color: var(--gold-bright); background: rgba(232, 200, 121, 0.12); }
+.title-item-label { font-size: 17px; }
+
+/* 章节进度小菱形 */
+.title-progress { display: inline-flex; gap: 4px; margin-top: 5px; }
+.title-progress i { width: 7px; height: 7px; transform: rotate(45deg); background: rgba(200, 162, 78, 0.22); }
+.title-progress i.on { background: var(--gold-bright); box-shadow: 0 0 5px rgba(232, 200, 121, 0.5); }
+
+/* 存档槽箭头 */
+.title-slots-arrow { margin-left: auto; color: var(--gold); font-size: 16px; }
+.slot-chip.active { box-shadow: 0 0 10px rgba(200, 162, 78, 0.4); }
+
+/* 引言框 */
+.title-quote { position: absolute; right: 3.5%; bottom: 5%; border-radius: 3px; box-shadow: inset 0 0 0 1px rgba(200, 162, 78, 0.1); }

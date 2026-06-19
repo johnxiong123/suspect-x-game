@@ -100,7 +100,7 @@ async function boot() {
     menus.title({
       hasSave: !!autoState,
       save: autoInfo ? { sub: `${(autoInfo.at || '').slice(0, 16).replace('T', ' ')} · ${chapterTitleOf(curCh) || CHAPTERS[0].title}` } : null,
-      progress: { sub: `当前进度 ${chapterTitleOf(curCh) || CHAPTERS[0].title}` },
+      progress: { sub: `当前进度 ${chapterTitleOf(curCh) || CHAPTERS[0].title}`, diamonds: { done: Math.max(1, CHAPTERS.findIndex((c) => c.id === curCh) + 1), total: CHAPTERS.length } },
       endings: { sub: `已解锁 ${prog.endings.length} / ${endingsData.length}` },
       slots: true,
       activeSlot: null,
