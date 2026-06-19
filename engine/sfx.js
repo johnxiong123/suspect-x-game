@@ -38,7 +38,7 @@ export function blip() {
   const c = ac();
   if (!c) return;
   const now = c.currentTime;
-  if (now - lastT < 0.05) return; // 节流
+  if (now - lastT < 0.08) return; // 节流
   lastT = now;
 
   // 有采样音则优先播放（听感自然）
@@ -47,7 +47,7 @@ export function blip() {
     s.buffer = typeBuffer;
     const g = c.createGain();
     const tail = Math.min(0.12, typeBuffer.duration); // 只取开头的实际发声段，避免长静音尾叠加
-    g.gain.setValueAtTime(0.5, now);
+    g.gain.setValueAtTime(0.3, now);
     g.gain.exponentialRampToValueAtTime(0.0001, now + tail);
     s.connect(g);
     g.connect(c.destination);
