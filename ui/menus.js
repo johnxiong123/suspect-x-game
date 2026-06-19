@@ -20,7 +20,7 @@ export class Menus {
   closeAll() { this.root.innerHTML = ''; }
 
   _overlay(cls, children, { dismissable = false } = {}) {
-    const card = el('div', { class: 'overlay-card' }, children);
+    const card = el('div', { class: 'overlay-card ornate' }, [el('span', { class: 'frame' }), ...children]);
     const ov = el('div', { class: 'overlay ' + cls }, [card]);
     if (dismissable) ov.addEventListener('click', (e) => { if (e.target === ov) ov.remove(); });
     this.root.appendChild(ov);

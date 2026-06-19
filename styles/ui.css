@@ -199,3 +199,40 @@
 
 /* 引言框 */
 .title-quote { position: absolute; right: 3.5%; bottom: 5%; border-radius: 3px; box-shadow: inset 0 0 0 1px rgba(200, 162, 78, 0.1); }
+
+/* ===== 所有弹层：统一描金风格 ===== */
+.overlay { background: rgba(4, 6, 9, 0.72); backdrop-filter: blur(4px); }
+.overlay-card { background: linear-gradient(180deg, rgba(20, 24, 32, 0.97), rgba(11, 14, 20, 0.98)); border: 1px solid var(--gold-line); border-radius: 6px; box-shadow: inset 0 0 0 1px rgba(200, 162, 78, 0.08), 0 24px 70px rgba(0, 0, 0, 0.7); }
+.overlay-card.ornate::before, .overlay-card.ornate::after, .overlay-card.ornate > .frame::before, .overlay-card.ornate > .frame::after { width: 16px; height: 16px; border-color: var(--gold); }
+
+.overlay-h { color: #f0e6cf; font-family: var(--font-serif); letter-spacing: 0.16em; position: relative; padding-bottom: 14px; }
+.overlay-h::after { content: ''; position: absolute; left: 50%; bottom: 0; transform: translateX(-50%); width: 64px; height: 1px; background: linear-gradient(90deg, transparent, var(--gold), transparent); }
+
+/* 通用按钮描金 */
+.menu-btn { background: linear-gradient(180deg, rgba(24, 28, 36, 0.9), rgba(12, 15, 21, 0.92)); border: 1px solid var(--gold-line); border-radius: 4px; color: #e7dcc4; letter-spacing: 0.05em; }
+.menu-btn:hover { background: linear-gradient(180deg, rgba(40, 32, 18, 0.92), rgba(22, 17, 10, 0.94)); border-color: var(--gold-bright); color: #fff; }
+.menu-btn.primary { background: linear-gradient(180deg, rgba(86, 64, 30, 0.95), rgba(44, 32, 15, 0.96)); border-color: var(--gold-bright); color: #f4ecd8; }
+
+.setting-row { border-bottom-color: var(--gold-line); }
+.setting-row span { color: #d8cdb4; }
+
+/* 金色滑块 */
+input[type="range"] { -webkit-appearance: none; appearance: none; height: 4px; border-radius: 2px; background: rgba(200, 162, 78, 0.22); outline: none; }
+input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 16px; height: 16px; margin-top: -6px; border-radius: 50%; background: var(--gold-bright); border: 1px solid #8a6a28; box-shadow: 0 0 6px rgba(232, 200, 121, 0.5); cursor: pointer; }
+input[type="range"]::-webkit-slider-runnable-track { height: 4px; border-radius: 2px; background: rgba(200, 162, 78, 0.22); }
+input[type="range"]::-moz-range-thumb { width: 16px; height: 16px; border: 1px solid #8a6a28; border-radius: 50%; background: var(--gold-bright); cursor: pointer; }
+input[type="range"]::-moz-range-track { height: 4px; border-radius: 2px; background: rgba(200, 162, 78, 0.22); }
+
+/* 金色复选框 */
+input[type="checkbox"] { appearance: none; -webkit-appearance: none; width: 18px; height: 18px; border: 1px solid var(--gold-line); border-radius: 3px; background: rgba(0, 0, 0, 0.3); cursor: pointer; position: relative; transition: 0.15s; }
+input[type="checkbox"]:hover { border-color: var(--gold-bright); }
+input[type="checkbox"]:checked { background: var(--gold); border-color: var(--gold-bright); }
+input[type="checkbox"]:checked::after { content: ''; position: absolute; left: 5px; top: 1px; width: 5px; height: 10px; border: solid #1a130a; border-width: 0 2px 2px 0; transform: rotate(45deg); }
+
+/* 列表类弹层项描金 */
+.chapter-row, .slot-row { border-color: var(--gold-line); }
+.chapter-row:hover { border-color: var(--gold-bright); background: rgba(40, 32, 18, 0.5); }
+.gallery-card.got { border-color: var(--gold-line); }
+.gallery-tag { color: var(--gold); }
+.gallery-card.got .gallery-title { color: var(--gold-bright); }
+.backlog-name { color: var(--gold); }
