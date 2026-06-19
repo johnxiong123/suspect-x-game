@@ -3,6 +3,7 @@ import { el } from './dom.js';
 import { asset } from '../engine/assets.js';
 import { listSaves, saveGame, loadGame, getProgress } from '../engine/state.js';
 import { getVolume, setVolume, isMuted, setMuted } from '../engine/audio.js';
+import { setEnabled as setSfxEnabled, isEnabled as isSfxEnabled } from '../engine/sfx.js';
 
 const I = {
   play: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M7 5l11 7-11 7z"/></svg>',
@@ -126,6 +127,9 @@ export class Menus {
     const mute = el('input', { type: 'checkbox' });
     mute.checked = isMuted();
     mute.addEventListener('change', () => setMuted(mute.checked));
+    const sfx = el('input', { type: 'checkbox' });
+    sfx.checked = isSfxEnabled();
+    sfx.addEventListener('change', () => setSfxEnabled(sfx.checked));
 
     const actions = [];
     if (opts.onSave) actions.push(el('button', { class: 'menu-btn small', text: '保存', onclick: opts.onSave }));
@@ -139,6 +143,7 @@ export class Menus {
       el('label', { class: 'setting-row' }, [el('span', { text: '快进（仅已读）' }), skip]),
       el('label', { class: 'setting-row' }, [el('span', { text: '音乐音量' }), vol]),
       el('label', { class: 'setting-row' }, [el('span', { text: '静音' }), mute]),
+      el('label', { class: 'setting-row' }, [el('span', { text: '文字音效' }), sfx]),
       actions.length ? el('div', { class: 'setting-actions' }, actions) : null,
       el('button', { class: 'menu-btn', text: '关闭', onclick: (e) => e.target.closest('.overlay')?.remove() }),
     ], { dismissable: true });

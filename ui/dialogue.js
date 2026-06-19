@@ -1,5 +1,6 @@
 // 对话框：打字机 + 点击/空格推进 + 选项 + 回想(backlog)；支持自动/跳过
 import { el } from './dom.js';
+import { blip } from '../engine/sfx.js';
 
 export class Dialogue {
   constructor(root, opts = {}) {
@@ -67,6 +68,8 @@ export class Dialogue {
       const timer = setInterval(() => {
         i += 1;
         this.textEl.textContent = full.slice(0, i);
+        const ch = full[i - 1];
+        if (!this.skip && ch && !/\s/.test(ch)) blip();
         if (i >= full.length) finish();
       }, interval);
       stage.addEventListener('click', onClick);

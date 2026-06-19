@@ -11,6 +11,7 @@ import { NavRail } from './ui/navrail.js';
 import { Panel } from './ui/panel.js';
 import { Menus } from './ui/menus.js';
 import { loadAudioManifest, playTrack, resume } from './engine/audio.js';
+import { unlock as unlockSfx } from './engine/sfx.js';
 
 const START = 'ch01_001';
 const AUTO = 'auto';
@@ -116,7 +117,7 @@ async function boot() {
   });
 
   // 首次用户交互后补放被浏览器拦截的 BGM
-  const unlock = () => { resume(); window.removeEventListener('pointerdown', unlock); window.removeEventListener('keydown', unlock); };
+  const unlock = () => { resume(); unlockSfx(); window.removeEventListener('pointerdown', unlock); window.removeEventListener('keydown', unlock); };
   window.addEventListener('pointerdown', unlock);
   window.addEventListener('keydown', unlock);
 
