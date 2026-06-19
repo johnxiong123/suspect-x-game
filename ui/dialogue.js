@@ -28,6 +28,7 @@ export class Dialogue {
     const full = line.text || '';
 
     return new Promise((resolve) => {
+      const stage = this.root.closest('.stage') || document;
       let typing = true;
       let i = 0;
       let resolved = false;
@@ -53,12 +54,12 @@ export class Dialogue {
       };
       const advance = () => { if (typing) finish(); else done(); };
       const onClick = (e) => {
-        if (e.target.closest('.dlg-choices, .navrail, .panel, .overlay, .topbar')) return;
+        if (e.target.closest('.dlg-choices, .topbar')) return;
         advance();
       };
       const onKey = (e) => { if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); advance(); } };
       const cleanup = () => {
-        document.removeEventListener('click', onClick);
+        stage.removeEventListener('click', onClick);
         document.removeEventListener('keydown', onKey);
       };
 
@@ -68,7 +69,7 @@ export class Dialogue {
         this.textEl.textContent = full.slice(0, i);
         if (i >= full.length) finish();
       }, interval);
-      document.addEventListener('click', onClick);
+      stage.addEventListener('click', onClick);
       document.addEventListener('keydown', onKey);
       if (this.skip) { finish(); autoTimer = setTimeout(done, 40); }
     });
